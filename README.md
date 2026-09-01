@@ -89,3 +89,7 @@ man_dies:
 (`true_destination`/`false_destination` are spelled out rather than just `true`/`false`, because YAML parses unquoted `true`/`false` as actual booleans — using them as map keys would silently turn them into the booleans `True`/`False` instead of the strings the code expects.)
 
 Two choice labels are handled specially by the game rather than being treated as ordinary destinations: `GAME OVER` ends the game, and `RESTART` starts it over. Their destination values in `story.yaml` are `null` since they're never actually looked up.
+
+## License
+
+All rights reserved — see [LICENSE](LICENSE). This repository is public for portfolio and demonstration purposes; it isn't licensed for reuse.
