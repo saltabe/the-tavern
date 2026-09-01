@@ -1,0 +1,630 @@
+# Starting value for every token the story can remember about the player's
+# choices. A scene sets a token by listing it under its own `tokens:` key
+# (see `stay_man`); a `condition` scene reads one back to branch on it.
+#
+#   kindness — set true if the player stays to hear the old man's story
+#     (`stay_man`); read by `man_dies` to decide whether he shares his
+#     fortune with the player before he dies.
+init_tokens:
+  kindness: false
+scenes:
+  # ---------------------------------------------------------------------------
+  # entrance
+  # ---------------------------------------------------------------------------
+  entrance:
+    text: |-
+      You arrive at a tavern in the middle of the snowy wilderness. You have not eaten in days.
+
+      Behind the bar you see …
+    choices:
+      AN OLD MAN: old_man
+      A YOUNG WOMAN: young_woman
+
+  # ---------------------------------------------------------------------------
+  # old man branch
+  # ---------------------------------------------------------------------------
+  old_man:
+    text: |-
+      You collapse into a chair. Behind the bar, an old man brings you a beer without a word.
+
+      "Food," you say weakly. "No beer."
+
+      The old man laughs. "Well, that’s the first time I’ve heard that."
+
+      You …
+    choices:
+      REPEAT YOURSELF: repeat_yourself
+      THROW THE BEER AT HIM: throw_beer
+  repeat_yourself:
+    text: |-
+      "I’m starving," you say. "Please, sir."
+
+      The old man looks you in the eye for the first time. "All right, all right. I’ll bring you up something. On the house."
+
+      The old man brings you a sandwich and water. You've got no sense of smell, but you have never cared less. It's the best sandwich you have ever eaten. You eat it in two seconds and guzzle down the water.
+
+      When you finally look up, the old man is watching you.
+
+      "You been through it, ay?" he says. "Now, I don’t do charity. But I could use a little help around here. My last hire didn’t work out. If you’ll help me tend bar, I’ve got a bed upstairs that’s got your name on it."
+    choices:
+      THIS IS MORE THAN YOU COULD HAVE HOPED FOR, WANDERING INTO THE ONLY TAVERN FOR MILES.: accept_job
+      YOUR OLD MAN WAS A PIECE OF SHIT. YOU DON'T TRUST THIS ONE EITHER.: refuse_job
+  accept_job:
+    text: |-
+      You look the old man dead in the eyes. "I’ll do it. I don’t come from much, but I’m a hard worker. Anything you need around here, I will do."
+
+      The old man sees it. The steel in you. "All right," he says. "All right."
+
+      You step behind the bar and grab a broom. Your work has just begun.
+    choices:
+      NEXT: man_morning
+  man_morning:
+    text: |-
+      It's morning.
+
+      You wake up, momentarily startled by your surroundings. You are in a bedroom not much larger than a broom closet. The blankets are worn. Someone else slept here, once. Someone who wasn't you. But not for some time.
+
+      You feel ...
+    choices:
+      LIKE YOU FINALLY GOT SOME REAL REST.: get_to_work
+      LIKE SLEEPING A LITTLE MORE, ACTUALLY.: man_wakes
+  get_to_work:
+    text: |-
+      You have never slept so well in your entire life.
+
+      You head downstairs. You don't want to let the old man down.
+
+      By the time he comes down, you are almost done cleaning glasses. You offer him a smile.
+
+      "Morning, sir."
+
+      He blinks. Perhaps he didn't expect this much of you. No one ever expected anything. "Morning."
+
+      You focus on the glasses. You can feel him watching you.
+
+      "You're a good kid," he says. "Anyone ever tell you that?"
+
+      You shrug. He gives you a pat on the shoulder before heading back upstairs.
+    choices:
+      NEXT: man_falls
+  man_wakes:
+    text: |-
+      You are not awake for long. You find yourself nodding off again.
+
+      Some time later, you hear a voice. It's angry.
+
+      "What did I tell you? I don't do charity!"
+
+      You ...
+    choices:
+      APOLOGIZE: apologize
+      YELL BACK: yell
+  apologize:
+    text: |-
+      "Look, man, I'm sorry," you say. "I was beat. Give me one more chance."
+
+      He looks at you for a long time. "Well, alright. I'm not a cruel man. And you did a pretty good job of cleaning up last night, after all."
+
+      "Thank you."
+
+      You ...
+    choices:
+      HEAD DOWNSTAIRS. YOU'VE GOT A JOB TO DO.: ignore_man
+      STAY A LITTLE LONGER. THE OLD MAN DOESN'T LOOK SO GOOD.: ask_man
+  ignore_man:
+    text: |-
+      You don't waste any more time. You get out of bed and head down to the tavern.
+
+      You feel the old man watching you as you go. You wonder who had this bed before you. But you're too old for sentiment. You keep walking.
+    choices:
+      NEXT: man_falls
+  ask_man:
+    text: |-
+      "You know, you don't look so good," you say. "Are you feeling all right, sir?"
+
+      He shrugs. "I don't sleep much."
+
+      You look around your room. In the corner is an old rocking horse. In your sleeplessness last night, you hadn't even noticed.
+
+      The old man sees you looking. "That was my son's. He would be about your age, now."
+
+      You ...
+    choices:
+      MAKE AN EXCUSE TO LEAVE. YOU DON'T NEED ANOTHER FATHER FIGURE.: leave_man
+      STAY: stay_man
+  leave_man:
+    text: |-
+      "That's too bad."
+
+      You stand.
+
+      You feel the old man watching you as you go. But you're too old for sentiment. You keep walking.
+    choices:
+      NEXT: man_falls
+  stay_man:
+    text: |-
+      "What was he like?" you ask.
+
+      The old man smiles. It's the first you've seen it. "Trouble! That boy was trouble."
+
+      You laugh.
+
+      "Now, that's enough of that. You get to work now. I'll be down in a minute."
+
+      "Yes, sir."
+
+      You head downstairs.
+    choices:
+      NEXT: man_falls
+    tokens:
+      kindness: true
+  man_falls:
+    text: |-
+      Some time later, you hear a thud and the sound of a man screaming.
+
+      You ...
+    choices:
+      STAY. THE OLD MAN GAVE YOU A JOB TO DO.: fire_ending
+      RUN UPSTAIRS. THERE ARE THINGS MORE IMPORTANT THAN WORK.: rescue_man
+  rescue_man:
+    text: |-
+      You run upstairs. The old man is on his stomach, struggling to get up. He is trying to use a table as leverage. On it is a candle. You grab the candle before it can tip over.
+
+      "Sir!"
+    choices:
+      NEXT: man_dies
+  man_dies:
+    condition:
+      token: kindness
+      expected: true
+      true_destination: reveal_fortune
+      false_destination: reveal_nothing
+  reveal_fortune:
+    text: |-
+      He shakes his head. "Son..."
+
+      You try to help him stand, but he falls back again. He looks pale. You put your arms around him.
+
+      "Hey, take it easy, old man."
+
+      He doesn't laugh. You don't either.
+
+      "Listen—"
+
+      "Don't talk."
+
+      "Listen. I have a fortune under my mattress. It's yours, son."
+
+      "How about you don't die? I'd rather that, sir."
+
+      He smiles. "We can't have everything that we want."
+    choices:
+      NEXT: fortune_ending
+  # ending
+  fortune_ending:
+    text: |-
+      The money is exactly where the old man said it was. You are rich beyond your wildest dreams.
+
+      But you never leave the tavern. You fix it up real nice, and spend the rest of your days tending to weary travellers who happen upon it. They never forget your kindness.
+    choices:
+      GAME OVER: null
+      RESTART: null
+  reveal_nothing:
+    text: |-
+      The old man shakes his head.
+
+      You try to help him stand, but he falls back again. He looks pale. You feel awful.
+
+      "Is there something I can do?"
+
+      The man doesn't speak. He looks towards your bedroom.
+
+      He stops blinking.
+
+      You ...
+    choices:
+      BURY HIM: bury_him
+      FLEE: exit_tavern
+  bury_him:
+    text: |-
+      Behind the tavern is a small headstone. You bury the old man next to it.
+
+      You hardly knew the guy. You feel bad.
+
+      You try to read the small headstone, but it's covered in snow. You brush it aside. A piece of paper falls from the top of the headstone.
+
+      TO WHOMEVER SHALL FIND ME ...
+
+      It's a will. The old man speaks from beyond the grave of a fortune left under his mattress.
+
+      Could it be? After a lifetime of trouble, could your luck have finally turned?
+    choices:
+      NEXT: fortune_ending
+  # ending
+  fire_ending:
+    text: |-
+      You stay behind the bar. You don't hear anything more.
+
+      If you had a sense of smell, you'd smell smoke. But you don't. Unbeknownst to you, the old man fell down. He tipped over a candle trying to get up by himself.
+
+      You wipe down another table. You don't realize the fire is coming for you until it's too late.
+    choices:
+      GAME OVER: null
+      RESTART: null
+  yell:
+    text: |-
+      "You crazy old man!" you yell. "I was gonna come down soon!"
+
+      "Crazy, eh?" he says. "I've had enough of you. Get out of my house."
+
+      "You don't have to tell me twice."
+
+      You exit the tavern.
+    choices:
+      NEXT: exit_tavern
+  refuse_job:
+    text: |-
+      You can look out for yourself. You always have.
+
+      "Yeah, no thanks. I’ll figure it out myself."
+
+      The old man shrugs. "Okay."
+
+      You exit the tavern.
+    choices:
+      NEXT: exit_tavern
+  exit_tavern:
+    random:
+    - destination: freeze_ending
+      probability: 0.95
+    - destination: bear_ending
+      probability: 0.05
+  # ending
+  freeze_ending:
+    text: |-
+      You are outside the tavern. The snow beats against your face. All your life you have walked through hell. You can stand to walk a little longer.
+
+      You take the road alone. Nothing but white space ahead of you. Nothing but sheer force of will keeping you going.
+
+      By the time your body starts to give out, you are too numb to feel it. You fall into the snow like a chess piece someone has knocked over.
+
+      Your body is never recovered. That's no matter. You are part of the wilderness now.
+    choices:
+      GAME OVER: null
+      RESTART: null
+  # ending
+  bear_ending:
+    text: |-
+      You are outside the tavern. The snow beats against your face. All your life you have walked through hell. You can stand to walk a little longer.
+
+      Suddenly, you see a bear! It has its claws out. You scream for help. The wilderness does not care. The bear mauls you to death.
+
+      You don't know what you expected. Nothing better than this, you suppose. Nothing better than this.
+    choices:
+      GAME OVER: null
+      RESTART: null
+  throw_beer:
+    text: |-
+      You lift the beer and toss the liquid at the old man.
+
+      "AY!" he screams. "Did your ma never teach you manners? Get out of my bar!"
+
+      You don’t move. He grabs a broom and starts hitting you with it.
+
+      "Alright, alright! I’m out of here!"
+    choices:
+      NEXT: exit_tavern
+
+  # ---------------------------------------------------------------------------
+  # young woman branch
+  # ---------------------------------------------------------------------------
+  young_woman:
+    text: |-
+      You collapse into a chair.
+
+      "Oh!" Behind the bar, a young woman clutches her hands to her face. "Are you all right?"
+
+      Her eyes are kind. You open your mouth to speak.
+    choices:
+      '"NO. I’M NOT. I’M STARVING."': tell_truth
+      '"I’M FINE, ACTUALLY."': lie
+  tell_truth:
+    text: |-
+      Hell, what do you have to lose? You put your head in your hands. "I'm starving."
+
+      "Not anymore," the woman says. "I’ll help you."
+
+      She steps behind a curtain and comes back with a sandwich and water. You've got no sense of smell, but you have never cared less. It's the best sandwich you have ever eaten.  You eat it in two seconds and guzzle down the water.
+
+      When you finally look up, the woman is watching you. She shakes her head.
+
+      "You look like a ghost," she says.
+
+      "Well, don't try and flatter me."
+
+      She laughs. She has a nice laugh.
+
+      "Look, I don't have much to offer," she says, "but I've got a spare room upstairs. You can sleep there tonight, if you want. I don't want to turn you out in the cold."
+
+      It never ends well, you and women.
+    choices:
+      BUT WHAT CHOICE DO YOU HAVE? THIS IS THE ONLY TAVERN FOR MILES.: accept_woman
+      YOU DON'T CARE. YOU SWORE ON YOUR MOTHER'S GRAVE YOU WERE DONE WITH WOMEN.: refuse_woman
+  accept_woman:
+    text: |-
+      "That sounds real nice right now," you admit. "Thank you."
+
+      "Of course," she says. "Let me make up the bed. I'll be right back."
+
+      She disappears behind some stairs.
+
+      You look down at your empty glass. You feel colder in her absence.
+    choices:
+      NEXT: woman_morning
+  refuse_woman:
+    text: |-
+      "Yeah, that's all right," you say. "I've got someone to get home to."
+
+      She looks disappointed. She would be more disappointed if she got to know you. "Well, all right. Best of luck."
+
+      You exit the bar.
+    choices:
+      NEXT: exit_tavern
+  lie:
+    text: |-
+      You wave her off. "I'm fine."
+
+      "You don’t look fine at all," she says.
+
+      "I said I was," you say. "You hard of hearing?"
+
+      "N–no."
+
+      You’re making everything worse. That’s all you have ever done.
+
+      You don’t belong here.
+
+      You exit the tavern.
+    choices:
+      NEXT: exit_tavern
+  woman_morning:
+    text: |-
+      It's morning.
+
+      You wake up, momentarily startled by your surroundings. You are in a bedroom not much larger than a broom closet. The blankets are worn. Someone else slept here, once. Someone who wasn't you. But not for some time.
+
+      You feel ...
+    choices:
+      LIKE SLEEPING A LITTLE MORE, ACTUALLY.: woman_wakes
+  woman_wakes:
+    text: |-
+      You are not awake for long. You find yourself nodding off again.
+
+      Some time later, you hear a voice. It's soft.
+
+      "You poor thing."
+
+      You feel awful.
+
+      The woman touches your back, gently helping you sit up. You haven't felt human touch in so how long. You lean in in spite of yourself.
+
+      "Here, have some water."
+
+      You ...
+    choices:
+      TAKE THE WATER: take_water
+      DON'T TAKE THE WATER: refuse_water
+  take_water:
+    text: |-
+      You take the water like a dying man.
+
+      "Thank you."
+
+      "Of course."
+
+      You look around your room. In the corner is an old rocking horse. In your sleeplessness last night, you hadn't even noticed.
+
+      The woman sees you looking. She looks at her lap, her face worn.
+
+      You ask ...
+    choices:
+      FOR MORE WATER: more_water
+      WHOSE ROOM THIS IS: ask_woman
+  more_water:
+    text: |-
+      "More."
+
+      You have a splitting headache. The woman's story can wait.
+
+      She looks disappointed, and then it's gone. "Sure."
+
+      She refills your cup from a pitcher, and you drift back to sleep.
+    choices:
+      NEXT: question_water
+  question_water:
+    text: |-
+      You wake up some time later. Your headache's only gotten worse. You moan in pain.
+
+      The woman comes to your aid, her hand on your back again.
+
+      "Say, what's in this water?"
+
+      The woman looks at you.
+
+      Oh.
+
+      Oh no.
+
+      Her mouth is a thin line. "It's ME or THE STORM."
+    choices:
+      ME: me
+      THE STORM: the_storm
+  me:
+    text: |-
+      Now, you've made a lot of terrible choices in your short life. Stopping at this tavern might have been the worst.
+
+      But you still have a choice left.
+
+      You don't have to die alone.
+
+      "You." The woman blinks, surprised. "I choose you."
+    choices:
+      NEXT: witch_ending
+  # ending
+  witch_ending:
+    text: |-
+      You live out the rest of your days at the tavern.
+
+      The woman doesn't slip you something every day. Only when she senses you starting to fall out of line.
+
+      The rest of the time, it's not so bad. It beats being out in the cold by yourself.
+
+      Weary travellers happen upon the tavern from time to time. They find it boarded up. The spare room is occupied.
+    choices:
+      GAME OVER: null
+      RESTART: null
+  the_storm:
+    text: |-
+      You're out of here. Anything's better than this.
+
+      You shove the woman aside. The water spills all over the floor. Not your problem. You grab the doorknob and don't look back.
+    choices:
+      NEXT: exit_tavern
+  ask_woman:
+    text: |-
+      You have a splitting headache. But it could be worse. Without this woman, it could be worse.
+
+      "Say, whose room is this?"
+
+      She looks up. You've never seen a woman look so sad. It isn't right.
+
+      "It was my son's."
+
+      "I'm so sorry." You know it's not enough. "That's not enough. But... really, I'm sorry. Can't imagine what you've been through."
+
+      You touch her hand. She leaps back.
+
+      "Sorry," you say.
+
+      "I should get back to work."
+
+      You're disappointed. You try to shake it. "Can you leave me the pitcher?"
+
+      She shakes her head. "I'll get you a fresh one."
+    choices:
+      NEXT: fresh_water
+  fresh_water:
+    text: |-
+      The woman returns a few minutes later, a fresh pitcher in hand.
+
+      "Thank you."
+
+      "It's nothing. Really."
+
+      You drink the water. It does actually help your head.
+
+      The woman stays near the door, like she doesn't belong in a room in her own house.
+
+      You ...
+    choices:
+      INVITE HER TO SIT WITH YOU: invite_woman
+      HEAD OUT. THIS IS ENOUGH HUMAN CONTACT FOR YOU.: leave_woman
+  invite_woman:
+    text: |-
+      You've been alone a long time. It's been easier that way. Easier, until now.
+
+      "You don't have to stand all the way over there," you say.
+
+      She blushes. She's real pretty, now that you think of it. She sits herself at the foot of the bed.
+
+      "What's a girl like you doing all alone?"
+
+      She smiles sadly. You'd like to see a real smile on her. "My husband left after our son died."
+
+      "Well, that's not a real man."
+
+      She shakes her head. "You're a nice man."
+
+      "I'm only repaying what you gave me."
+
+      She looks away. "I should get back to work. But you can stay until the storm clears."
+    choices:
+      NEXT: romantic_ending
+  # ending
+  romantic_ending:
+    text: |-
+      You stay. As a matter of fact, you stay well after the storm clears.
+
+      What can you say? You're still a romantic at heart. You fall in love with the girl. Falling is easy, once you stop fighting it.
+
+      You marry and have kids of your own. The tavern is never quiet again.
+
+      Weary travellers happen upon it from time to time. You offer them food and water, but you can't offer them board. Your house is full.
+    choices:
+      GAME OVER: null
+      RESTART: null
+  leave_woman:
+    text: |-
+      "Well, I'll be getting along then," you say. "Thanks for your hospitality."
+
+      "You can stay until the storm clears, you know."
+
+      You shake your head. "I'm a lone wolf, ma'am. I'd like to keep it that way."
+
+      She looks disappointed. She would be more disappointed if she got to know you. "Well, all right. Best of luck."
+
+      You exit the tavern.
+    choices:
+      NEXT: exit_tavern
+  refuse_water:
+    text: |-
+      You shove the cup away from you. "Say, what's in this?"
+
+      "Water," the woman repeats.
+
+      You have a splitting headache. Something isn't right.
+
+      You ...
+    choices:
+      FLEE: flee
+      NEGOTIATE: negotiate
+  flee:
+    text: |-
+      You stand. "You some kind of witch? What did you put in my water last night?"
+
+      She slaps you. "Ingrat! You would have died if not for me."
+
+      "Better off dead than here!"
+
+      You exit the tavern.
+    choices:
+      NEXT: exit_tavern
+  negotiate:
+    text: |-
+      You don't know this woman. But you know something about mistakes. You have plenty of your own.
+
+      "You know, I left my brother for dead." You look at your lap. "It was supposed to be the two of us, but we got to fighting. I got so mad, I grabbed the food in the middle of the night and left."
+
+      You look up. The woman isn't touching you anymore. Isn't leaving, either.
+
+      "Now, I know you put something in my drink," you say, "but — fuck it. I'm going to hell, too."
+
+      The woman shakes her head. "I don't believe in hell. If there was a god, my son wouldn't have died."
+
+      "So, say there's no god," you say. "Say the world's just us. What the fuck should we do?"
+
+      "I should get you a fresh pitcher."
+
+      "Hey, you're funny."
+
+      She walks to the door, then pauses. "You can stay until the storm clears, you know. It's your choice."
+
+      You ...
+    choices:
+      STAY: romantic_ending
+      LEAVE: window
+  window:
+    text: You know you and that woman won't do each other any good. While she's fetching water, you climb
+      out the window.
+    choices:
+      NEXT: exit_tavern
