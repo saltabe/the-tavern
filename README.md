@@ -13,14 +13,14 @@ pip install -r requirements.txt
 ## Run
 
 ```bash
-python3 app.py
+python3 main.py
 ```
 
 Use the arrow keys and Enter to pick from the menu at each scene. Once you've made at least one choice, a **GO BACK** option appears in the menu — picking it undoes your last choice and returns you to the scene before it, including reverting any story flag that choice had set.
 
-`app.py` reads its story from `story.yaml`, which sits next to the script and is loaded relative to the script's own location — so the game runs correctly no matter what directory you launch it from.
+`main.py` reads its story from `story.yaml`, which sits next to the script and is loaded relative to the script's own location — so the game runs correctly no matter what directory you launch it from.
 
-Before the game starts, `app.py` checks `story.yaml` for problems — a choice, random option, or condition pointing at a scene that doesn't exist, a scene with none of `choices`/`random`/`condition`, or a condition missing a required field. If it finds any, it refuses to start and lists exactly what's wrong, so a bad edit to the story fails loudly right away instead of crashing (or silently misbehaving) only when a player happens to walk into the broken part. It also prints a warning (not an error) for any scene nothing can ever reach from the start.
+Before the game starts, `main.py` checks `story.yaml` for problems — a choice, random option, or condition pointing at a scene that doesn't exist, a scene with none of `choices`/`random`/`condition`, or a condition missing a required field. If it finds any, it refuses to start and lists exactly what's wrong, so a bad edit to the story fails loudly right away instead of crashing (or silently misbehaving) only when a player happens to walk into the broken part. It also prints a warning (not an error) for any scene nothing can ever reach from the start.
 
 ## Editing the story
 
