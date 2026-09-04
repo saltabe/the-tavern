@@ -1,6 +1,6 @@
 # The Tavern
 
-A choice-based text adventure that runs in the terminal. You arrive, starving, at a tavern in the snowy wilderness — every choice you make branches the story toward one of six endings.
+A choice-based text adventure that runs in the terminal. You arrive, starving, at a tavern in the snowy wilderness — every choice you make branches the story toward one of six endings. Kindness and collaboration are rewarded while self-reliance decreases your chances of survival.
 
 ## Setup
 
@@ -20,13 +20,11 @@ Use the arrow keys and Enter to pick from the menu at each scene. Once you've ma
 
 `main.py` reads its story from `story.yaml`, which sits next to the script and is loaded relative to the script's own location — so the game runs correctly no matter what directory you launch it from.
 
-Before the game starts, `main.py` checks `story.yaml` for problems — a choice, random option, or condition pointing at a scene that doesn't exist, a scene with none of `choices`/`random`/`condition`, or a condition missing a required field. If it finds any, it refuses to start and lists exactly what's wrong, so a bad edit to the story fails loudly right away instead of crashing (or silently misbehaving) only when a player happens to walk into the broken part. It also prints a warning (not an error) for any scene nothing can ever reach from the start.
-
 ## Editing the story
 
 `story.yaml` has two top-level keys:
 
-- `init_tokens` — the starting value of every token (a piece of state the story can remember, like whether you were kind to a character earlier).
+- `init_tokens` — the starting value of every token (a piece of state the story can remember, specifically whether you were kind to a character earlier).
 - `scenes` — a map of scene name → scene, keyed by whatever the game calls that scene internally (the key is never shown to the player).
 
 Every scene is one of three shapes:
@@ -42,7 +40,7 @@ old_man:
     THROW THE BEER AT HIM: throw_beer
 ```
 
-Each choice's value is the name of the scene it leads to. A scene that just continues the story with no real decision still uses this shape, with a single choice labeled `NEXT`:
+Each choice's value is the name of the scene it leads to. A scene that just continues the story with no decision to be made still uses this shape, with a single choice labeled `NEXT`:
 
 ```yaml
 accept_job:

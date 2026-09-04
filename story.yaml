@@ -3,8 +3,8 @@
 # (see `stay_man`); a `condition` scene reads one back to branch on it.
 #
 #   kindness — set true if the player stays to hear the old man's story
-#     (`stay_man`); read by `man_dies` to decide whether he shares his
-#     fortune with the player before he dies.
+#     (`stay_man`); read by `man_dies` to decide whether the old man shares
+#     his fortune with the player before dying.
 init_tokens:
   kindness: false
 scenes:
