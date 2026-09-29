@@ -22,9 +22,10 @@ Use the arrow keys and Enter to pick from the menu at each scene. Once you've ma
 
 ## Editing the story
 
-`story.yaml` has two top-level keys:
+`story.yaml` has these top-level keys:
 
 - `init_tokens` — the starting value of every token (a piece of state the story can remember, specifically whether you were kind to a character earlier).
+- `init_tries` — the starting value of every counter, for state that counts up rather than flipping true/false. Optional; a story with nothing to count can leave it out.
 - `scenes` — a map of scene name → scene, keyed by whatever the game calls that scene internally (the key is never shown to the player).
 
 Every scene is one of three shapes:
@@ -60,6 +61,18 @@ stay_man:
     NEXT: man_falls
   tokens:
     kindness: true
+```
+
+A normal scene can also increment a counter (one declared in `init_tries`, not `init_tokens`) when the player enters it:
+
+```yaml
+dismayed:
+  text: |
+    ...
+  choices:
+    GRAB THE BREAD: grab_bread
+  tries:
+    - stand
 ```
 
 **A random scene** — never shown to the player; picks a destination by weighted coin flip as soon as it's reached:

@@ -40,16 +40,27 @@ class GameState:
     story: dict
     scene_title: str
     tokens: dict
+    tries: dict = field(default_factory=dict)
     progress: list = field(default_factory=list)
 
     @classmethod
     def new_game(cls, story):
         first_scene = next(iter(story["scenes"]))
-        return cls(story=story, scene_title=first_scene, tokens=dict(story["init_tokens"]))
+        return cls(
+            story=story,
+            scene_title=first_scene,
+            tokens=dict(story["init_tokens"]),
+            tries=dict(story.get("init_tries", {})),
+        )
 
     @property
     def scene(self):
         return self.story["scenes"][self.scene_title]
+
+    @property
+    def all_tokens(self):
+        """tokens and tries together, for condition scenes to read from."""
+        return {**self.tokens, **self.tries}
 
     def go_to(self, scene_title):
         self.scene_title = scene_title
@@ -61,12 +72,16 @@ class GameState:
         scene = self.scene
         if "tokens" in scene:
             self.tokens.update(scene["tokens"])
+        for token in scene.get("tries", []):
+            self.tries[token] = self.tries.get(token, 0) + 1
         self.progress.append(self.scene_title)
 
     def go_back(self):
         leaving_scene = self.scene
         for token in leaving_scene.get("tokens", {}):
             self.tokens[token] = self.story["init_tokens"][token]
+        for token in leaving_scene.get("tries", []):
+            self.tries[token] -= 1
 
         # Rewind by one full scene: drop the one we're leaving, then land on
         # the one before it.
@@ -139,7 +154,7 @@ def ask_choice(choices, can_go_back):
 
 def play(state):
     while True:
-        redirect = reroute_scene(state.scene, state.tokens)
+        redirect = reroute_scene(state.scene, state.all_tokens)
 
         if redirect is not None:
             state.go_to(redirect)
