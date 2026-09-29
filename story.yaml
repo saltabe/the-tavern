@@ -175,10 +175,11 @@ scenes:
       NEXT: man_dies
   man_dies:
     condition:
-      token: kindness
-      expected: true
-      true_destination: reveal_fortune
-      false_destination: reveal_nothing
+      checks:
+        - token: kindness
+          expected: true
+          destination: reveal_fortune
+      else: reveal_nothing
   reveal_fortune:
     text: |-
       He shakes his head. "Son..."

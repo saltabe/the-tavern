@@ -73,18 +73,19 @@ exit_tavern:
       probability: 0.05
 ```
 
-**A condition scene** — never shown to the player; branches on the current value of a token:
+**A condition scene** — never shown to the player; branches on the current value of one or more tokens. `checks` is tried in order, and the first one whose token matches its `expected` value wins; if none match, `else` is used:
 
 ```yaml
 man_dies:
   condition:
-    token: kindness
-    expected: true
-    true_destination: reveal_fortune
-    false_destination: reveal_nothing
+    checks:
+      - token: kindness
+        expected: true
+        destination: reveal_fortune
+    else: reveal_nothing
 ```
 
-(`true_destination`/`false_destination` are spelled out rather than just `true`/`false`, because YAML parses unquoted `true`/`false` as actual booleans — using them as map keys would silently turn them into the booleans `True`/`False` instead of the strings the code expects.)
+A scene can chain more than one check — the first match wins, so order matters.
 
 Two choice labels are handled specially by the game rather than being treated as ordinary destinations: `GAME OVER` ends the game, and `RESTART` starts it over. Their destination values in `story.yaml` are `null` since they're never actually looked up.
 

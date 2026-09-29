@@ -99,10 +99,11 @@ def roll_dice(scene):
 def check_condition(scene, tokens):
     condition = scene["condition"]
 
-    if tokens.get(condition["token"]) == condition["expected"]:
-        return condition["true_destination"]
-    else:
-        return condition["false_destination"]
+    for check in condition["checks"]:
+        if tokens.get(check["token"]) == check["expected"]:
+            return check["destination"]
+
+    return condition["else"]
 
 
 def reroute_scene(scene, tokens):
